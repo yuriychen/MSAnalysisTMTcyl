@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1610688527029.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1621273762",
+    "id" : "3B18E691",
+    "lastKnownWriteTime" : 1611062595,
+    "last_content_update" : 1611062595438,
+    "path" : "D:/YulinChen/ZJU LSI/Lin Lab/R_Packages/MSAnalysisTMTcyl/R/data_read_and_clean.R",
+    "project_path" : "R/data_read_and_clean.R",
+    "properties" : {
+        "cursorPosition" : "7,10",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

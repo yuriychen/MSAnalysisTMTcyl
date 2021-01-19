@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1610795518797.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2873072847",
+    "id" : "917AB2BF",
+    "lastKnownWriteTime" : 1611062594,
+    "last_content_update" : 1611062594395,
+    "path" : "D:/YulinChen/ZJU LSI/Lin Lab/R_Packages/MSAnalysisTMTcyl/R/data_normalization.R",
+    "project_path" : "R/data_normalization.R",
+    "properties" : {
+        "cursorPosition" : "13,23",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
