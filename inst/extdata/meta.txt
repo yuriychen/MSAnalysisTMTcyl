@@ -1,0 +1,19 @@
+sample	condition	repeat	reference	set	channel
+mix_re1	reference	1	1	1	Reporter.intensity.corrected.1.re1
+0hr_re1	0hr	1		1	Reporter.intensity.corrected.2.re1
+3hr_re1	3hr	1		1	Reporter.intensity.corrected.3.re1
+9hr_re1	9hr	1		1	Reporter.intensity.corrected.4.re1
+10.5hr_re1	10.5hr	1		1	Reporter.intensity.corrected.5.re1
+12hr_re1	12hr	1		1	Reporter.intensity.corrected.6.re1
+mix_re2	reference	2	1	2	Reporter.intensity.corrected.1.re2
+0hr_re2	0hr	2		2	Reporter.intensity.corrected.2.re2
+3hr_re2	3hr	2		2	Reporter.intensity.corrected.3.re2
+9hr_re2	9hr	2		2	Reporter.intensity.corrected.4.re2
+10.5hr_re2	10.5hr	2		2	Reporter.intensity.corrected.5.re2
+12hr_re2	12hr	2		2	Reporter.intensity.corrected.6.re2
+mix_re3	reference	3	1	3	Reporter.intensity.corrected.1.re3
+0hr_re3	0hr	3		3	Reporter.intensity.corrected.2.re3
+3hr_re3	3hr	3		3	Reporter.intensity.corrected.3.re3
+9hr_re3	9hr	3		3	Reporter.intensity.corrected.4.re3
+10.5hr_re3	10.5hr	3		3	Reporter.intensity.corrected.5.re3
+12hr_re3	12hr	3		3	Reporter.intensity.corrected.6.re3

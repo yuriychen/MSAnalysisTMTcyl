@@ -1,0 +1,27 @@
+#' TMT dataset of 5 conditions and 3 repeats with annotations
+#'
+#' A dataset containing TMT dataset of 5 conditions and 3 repeats with annotations.
+#'
+#' @format A data frame with 133 rows and 19 variables:
+#' \describe{
+#'   \item{0hr_re1}{reporter intensity of 0hr repeat 1}
+#'   \item{3hr_re1}{reporter intensity of 0hr repeat 1}
+#'   \item{9hr_re1}{reporter intensity of 0hr repeat 1}
+#'   \item{10.5hr_re1}{reporter intensity of 0hr repeat 1}
+#'   \item{12hr_re1}{reporter intensity of 0hr repeat 1}
+#'   \item{0hr_re2}{reporter intensity of 0hr repeat 2}
+#'   \item{3hr_re2}{reporter intensity of 0hr repeat 2}
+#'   \item{9hr_re2}{reporter intensity of 0hr repeat 2}
+#'   \item{10.5hr_re2}{reporter intensity of 0hr repeat 2}
+#'   \item{12hr_re2}{reporter intensity of 0hr repeat 2}
+#'   \item{0hr_re3}{reporter intensity of 0hr repeat 3}
+#'   \item{3hr_re3}{reporter intensity of 0hr repeat 3}
+#'   \item{9hr_re3}{reporter intensity of 0hr repeat 3}
+#'   \item{10.5hr_re3}{reporter intensity of 0hr repeat 3}
+#'   \item{12hr_re3}{reporter intensity of 0hr repeat 3}
+#'   \item{id}{id from MaxQuant proteinGroups file}
+#'   \item{ACCID}{acession ids of proteins}
+#'   \item{PROTEIN}{protein names id of proteins}
+#'   \item{FULLNAME}{full names id of proteins}
+#' }
+"prot_dat_example"

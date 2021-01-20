@@ -12,6 +12,7 @@
 #' @import tidyverse
 #' @import psych
 #' @import RColorBrewer
+#' @examples prot_norm_example <- data_norm(prot_dat_example[1:15], 5, 3)
 
 data_norm <- function(prot_dat,condition_num,repeat_num){
   data_graphic_draw_norm(prot_dat,condition_num,repeat_num,'Before Normalization')

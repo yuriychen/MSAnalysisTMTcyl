@@ -24,3 +24,6 @@ Normalize MS TMT data which contain no zero rows.
 \details{
 Input dataframe from read_maxquant_prot() function, then return a data set after normalization with SL, TMM and IRS.
 }
+\examples{
+prot_norm_example <- data_norm(prot_dat_example[1:15], 5, 3)
+}

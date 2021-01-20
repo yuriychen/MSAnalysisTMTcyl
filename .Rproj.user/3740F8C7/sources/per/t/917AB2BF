@@ -5,14 +5,14 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2873072847",
+    "hash" : "2432090326",
     "id" : "917AB2BF",
-    "lastKnownWriteTime" : 1611062594,
-    "last_content_update" : 1611062594395,
+    "lastKnownWriteTime" : 1611108268,
+    "last_content_update" : 1611108268127,
     "path" : "D:/YulinChen/ZJU LSI/Lin Lab/R_Packages/MSAnalysisTMTcyl/R/data_normalization.R",
     "project_path" : "R/data_normalization.R",
     "properties" : {
-        "cursorPosition" : "13,23",
+        "cursorPosition" : "18,0",
         "scrollLine" : "0",
         "tempName" : "Untitled1"
     },

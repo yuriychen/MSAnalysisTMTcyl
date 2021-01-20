@@ -4,12 +4,12 @@
 \alias{read_maxquant_prot}
 \title{Read, clean and annotate MS TMT data.}
 \usage{
-read_maxquant_prot(filename, metafile, total = FALSE)
+read_maxquant_prot(prot_raw, meta, total = FALSE)
 }
 \arguments{
-\item{filename}{A string of processed file path.}
+\item{prot_raw}{A DataFrame of proteinGroups from MaxQuant.}
 
-\item{metafile}{A string of metafile path.}
+\item{meta}{A DataFrame of metafile.}
 
 \item{total}{A boolean of considering zero row or not.}
 }
@@ -21,4 +21,11 @@ Read, clean and annotate MS TMT data with Maxquant process data and meta file.
 }
 \details{
 Input MaxQuang processed MS TMT data and meta file, then return a data set with annotation and TMT quantification results.
+}
+\examples{
+meta_exam_path <- system.file("extdata", "meta.txt", package = "MSAnalysisTMTcyl")
+meta_exam <- read.table(meta_exam_path,sep='\t',header=TRUE)
+prot_exam_path <- system.file("extdata", "proteinGroups.txt", package = "MSAnalysisTMTcyl")
+prot_exam <- read.table(prot_exam_path,sep='\t',header=TRUE)
+prot_dat_example <- read_maxquant_prot(prot_exam,meta_exam)
 }

@@ -1,17 +1,22 @@
 #' @title Read, clean and annotate MS TMT data.
 #' @description Read, clean and annotate MS TMT data with Maxquant process data and meta file.
 #' @details Input MaxQuang processed MS TMT data and meta file, then return a data set with annotation and TMT quantification results.
-#' @param filename A string of processed file path.
-#' @param metafile A string of metafile path.
+#' @param prot_raw A DataFrame of proteinGroups from MaxQuant.
+#' @param meta A DataFrame of metafile.
 #' @param total A boolean of considering zero row or not.
 #' @return A DataFrame.
 #' @export
+#' @examples
+#' meta_exam_path <- system.file("extdata", "meta.txt", package = "MSAnalysisTMTcyl")
+#' meta_exam <- read.table(meta_exam_path,sep='\t',header=TRUE)
+#' prot_exam_path <- system.file("extdata", "proteinGroups.txt", package = "MSAnalysisTMTcyl")
+#' prot_exam <- read.table(prot_exam_path,sep='\t',header=TRUE)
+#' prot_dat_example <- read_maxquant_prot(prot_exam,meta_exam)
 
 
-read_maxquant_prot <- function(filename,metafile,total=FALSE){
-  prot_raw <- read.table(filename,header = TRUE,sep = '\t')
+read_maxquant_prot <- function(prot_raw,meta,total=FALSE){
   prot_dat_clean <- data_clean(prot_raw)
-  prot_dat_extract <- data_extract(prot_dat_clean,metafile,total)
+  prot_dat_extract <- data_extract(prot_dat_clean,meta,total)
   prot_annotation <- data_annotation(prot_dat_extract)
   rownames(prot_annotation) <- prot_annotation$id
   return(prot_annotation)
@@ -23,8 +28,7 @@ data_clean <- function(prot_raw){
   return(prot_dat_clean)
 }
 
-data_extract <- function(prot_dat,metafile,total=FALSE){
-  meta <- read.table(metafile,header = TRUE, sep = '\t')
+data_extract <- function(prot_dat,meta,total=FALSE){
 
   if (total == FALSE){
     temp <- TRUE
