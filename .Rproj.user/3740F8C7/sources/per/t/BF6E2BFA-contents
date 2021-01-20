@@ -57,7 +57,7 @@ data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, y
   lgpvalue <- -log10(pvalue)
 
   prot_mean_sd <- data_calMean_calSD(cbind(prot_dat_1,prot_dat_2),meta)
-  fc <- prot_mean_sd[,1] / prot_mean_sd[,3]
+  fc <- prot_mean_sd[,3] / prot_mean_sd[,1]
   l2fc <- log2(fc)
 
   prot_fudge <- data.frame(l2fc,lgpvalue)
