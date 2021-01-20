@@ -89,3 +89,35 @@ data_calsmoothcurve = function(x,ta,s0,df){
     return(y)
   }
 }
+
+#' @title Draw Specific Protein Intensity plot
+#' @description Draw Specific Protein Intensity plot.
+#' @details Input dataframe from data_transform_melt, then return a ggplot object of intensity plot.
+#' @param prot_dat_specific A DataFrame from data_transform_melt.
+#' @param id A integer or string.
+#' @return A ggplot object.
+#' @export
+#' @import ggplot2
+#' @examples data_draw_specific(prot_dat_specific_exam, 33)
+data_draw_specific <- function(prot_dat_specific, id){
+  p <- ggplot(prot_dat_specific[prot_dat_specific[,1]==id,],aes(x=condition,y=value))+geom_point(size=2)+
+    theme_bw()+theme(axis.title = element_text(size=20),axis.text = element_text(size=18,angle = 60,hjust = 1),title = element_text(size=22))+
+    xlab('')+ylab('Relative Intensity')+ggtitle(id)
+  return(p)
+}
+
+#' @title Transform DataFrame by melt
+#' @description Transform DataFrame by melt.
+#' @details Input dataframe from previous processing, then return a DataFame of conditions melt.
+#' @param prot_dat A DataFrame from previous processing.
+#' @param meta A DataFrame of meta file.
+#' @return A DataFrame of melt.
+#' @export
+#' @import reshape2
+#' @examples prot_dat_specific_exam <- data_transform_melt(prot_norm_example[1:15],meta_exam)
+data_transform_melt <- function(prot_dat, meta){
+  prot_dat <- cbind(rownames(prot_dat),prot_dat)
+  prot_dat_specific <- melt(prot_dat)
+  prot_dat_specific$condition <- apply(prot_dat_specific,1,function(x){meta$condition[(meta$sample == x[2])]})
+  return(prot_dat_specific)
+}

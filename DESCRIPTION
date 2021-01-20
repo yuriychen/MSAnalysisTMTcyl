@@ -15,5 +15,6 @@ Imports: limma,
     psych,
     RColorBrewer,
     ggplot2,
-    ggrepel
+    ggrepel,
+    reshape2
 RoxygenNote: 7.1.1
