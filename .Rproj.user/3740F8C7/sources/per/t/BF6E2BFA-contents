@@ -47,13 +47,13 @@ data_calMean_calSD <- function(prot_dat, meta){
 #' @import ggrepel
 #' @examples data_volcano(prot_norm_example[,c(2,7,12)],prot_norm_example[,c(5,10,15)],meta_exam,4)
 
-data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, ydown=0, ytop=3, confidence=.95, s0=.01){
+data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, ydown=0, ytop=3, confidence=.95, s0=.1){
   ta <- qt(confidence,df)
 
   prot_dat_com <- cbind(prot_dat_1,prot_dat_2)
   colnum1 <- ncol(prot_dat_1)
   colnum2 <- ncol(prot_dat_2)
-  pvalue <- apply(prot_dat_com, 1, function(x){t.test(x[1:colnum1],x[(colnum1 + 1):colnum2],paired = F)$p.value})
+  pvalue <- apply(prot_dat_com, 1, function(x){t.test(x[1:colnum1],x[(colnum1 + 1):(colnum2+colnum1)],paired = F)$p.value})
   lgpvalue <- -log10(pvalue)
 
   prot_mean_sd <- data_calMean_calSD(cbind(prot_dat_1,prot_dat_2),meta)
@@ -66,6 +66,7 @@ data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, y
   prot_fudge$fudge <- apply(prot_fudge,1, function(x){data_calsmoothcurve(as.numeric(x[1]),ta,s0,df)})
   prot_fudge$sig <- apply(prot_fudge,1,function(x){ifelse(((as.numeric(x[2]) > as.numeric(x[3])) & (abs(as.numeric(x[1]))>ta*s0)),'1','0')})
   prot_fudge_sig <- subset(prot_fudge,sig=='1')
+  print(prot_fudge)
 
   p <- ggplot(prot_fudge,aes(x=l2fc,y=lgpvalue,color=sig))+geom_point()+theme_bw()+
     scale_color_manual(values = c('black','red'))+theme(legend.position = 'none',title = element_text(size=20),axis.text = element_text(size=16))+
