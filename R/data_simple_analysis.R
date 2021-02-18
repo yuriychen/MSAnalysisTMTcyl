@@ -75,7 +75,7 @@ data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, y
     geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(.02,xright),linetype='dashed',n=10000,size=2,alpha=.3,color='darkred')+
     geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(xleft,-.02),size=2,alpha=.3,color='darkgreen',n=10000,linetype='dashed')+
     xlim(xleft,xright)+ylim(ydown,ytop)
-  return(p)
+  return(list(prot_fudge,p))
 }
 
 data_calsmoothcurve = function(x,ta,s0,df){
