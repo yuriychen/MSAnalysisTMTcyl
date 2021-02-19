@@ -14,9 +14,9 @@
 #' prot_dat_example <- read_maxquant_prot(prot_exam,meta_exam)
 
 
-read_maxquant_prot <- function(prot_raw,meta,total=FALSE){
+read_maxquant_prot <- function(prot_raw,meta,total=FALSE,reference=TRUE,zerotol=2){
   prot_dat_clean <- data_clean(prot_raw)
-  prot_dat_extract <- data_extract(prot_dat_clean,meta,total)
+  prot_dat_extract <- data_extract(prot_dat_clean,meta,total,reference,zerotol)
   prot_annotation <- data_annotation(prot_dat_extract)
   rownames(prot_annotation) <- prot_annotation$id
   return(prot_annotation)
@@ -28,20 +28,30 @@ data_clean <- function(prot_raw){
   return(prot_dat_clean)
 }
 
-data_extract <- function(prot_dat,meta,total=FALSE){
+data_extract <- function(prot_dat,meta,total=FALSE,reference=TRUE,zerotol=2){
 
   if (total == FALSE){
-    temp <- TRUE
-    for (t in meta$channel[!is.na(meta$reference)]) {
-      temp <- temp & (prot_dat[,t] != 0)
+    if (reference == TRUE){
+      temp <- TRUE
+      for (t in meta$channel[!is.na(meta$reference)]) {
+        temp <- temp & (prot_dat[,t] != 0)
+      }
+      prot_dat <- prot_dat[temp,]
     }
-    prot_dat <- prot_dat[temp,]
+    else{
+      temp <- TRUE
+      for (t in unique(meta$set)) {
+        prot_t <- prot_dat[,meta$channel[meta$set == t]]
+        prot_t[prot_t > 0] <- 1
+        prot_t$sum <- rowSums(prot_t)
+        temp <- temp & (prot_t$sum >= (nrow(meta[meta$set == t,]) - zerotol))
+      }
+      prot_dat <- prot_dat[temp,]
+    }
   }
 
   prot_dat_tmt <- prot_dat[,meta$channel]
   colnames(prot_dat_tmt) <- meta$sample
-  target <- meta$sample[is.na(meta$reference)]
-  prot_dat_tmt <- prot_dat_tmt[,target]
 
   prot_dat_extract <- cbind(prot_dat_tmt,prot_dat[,c('id','Fasta.headers')])
 
