@@ -66,7 +66,6 @@ data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, y
   prot_fudge$fudge <- apply(prot_fudge,1, function(x){data_calsmoothcurve(as.numeric(x[1]),ta,s0,df)})
   prot_fudge$sig <- apply(prot_fudge,1,function(x){ifelse(((as.numeric(x[2]) > as.numeric(x[3])) & (abs(as.numeric(x[1]))>ta*s0)),'1','0')})
   prot_fudge_sig <- subset(prot_fudge,sig=='1')
-  print(prot_fudge)
 
   p <- ggplot(prot_fudge,aes(x=l2fc,y=lgpvalue,color=sig))+geom_point()+theme_bw()+
     scale_color_manual(values = c('black','red'))+theme(legend.position = 'none',title = element_text(size=20),axis.text = element_text(size=16))+

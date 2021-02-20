@@ -30,9 +30,9 @@ data_norm <- function(prot_dat,condition_num,repeat_num,reference=TRUE,ref_col =
     prot_norm <- prot_sl_tmm_ers
 
     data_pearson_draw(prot_dat, condition_num + 1, repeat_num,'Before Normalization')
-    data_pearson_draw(prot_norm, condition_num + 1, repeat_num,'SL/TMM/IRS Normalization')
+    data_pearson_draw(prot_norm, condition_num + 1, repeat_num,'SL/TMM/ERS Normalization')
 
-    prot_norm <- prot_norm[[,-ref_col]]
+    prot_norm <- prot_norm[,-ref_col]
   }
   else{
     data_graphic_draw_norm(prot_dat,condition_num,repeat_num,'Before Normalization')
