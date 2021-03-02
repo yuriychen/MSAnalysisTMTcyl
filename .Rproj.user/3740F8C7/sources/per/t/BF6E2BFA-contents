@@ -1,3 +1,36 @@
+#' @title Plot TMT Identified Protein Summary
+#' @description Plot TMT identified protein summary.
+#' @details Input dataframe from read_maxquant_prot() function, then return a list of two ggplot objects.
+#' @param prot_raw A DataFrame from read_maxquant_prot().
+#' @param meta A DataFrame of meta file.
+#' @return A list of two ggplot objects.
+#' @export
+#' @import ggplot2
+data_proteins_summary <- function(prot_raw,meta){
+  temp <- prot_raw[,meta$channel]
+  colnames(temp) <- meta$sample
+  temp_count <- temp
+  temp_count[temp_count > 0] <- 1
+  p_count <- cbind(colnames(temp_count),colSums(temp_count))
+  p_count <- data.frame(p_count)
+  p_count[,1] <- factor(p_count[,1],levels=p_count[,1])
+  p_count[,2] <- as.numeric(p_count[,2])
+  p_c <- ggplot(data=p_count,aes(x=p_count[,1],y=p_count[,2]))+geom_bar(stat='identity') +
+    theme_bw() + theme(axis.text.x = element_text(angle = 60,hjust=1),legend.position = 'none',axis.text = element_text(size=12))+
+    xlab('')+ylab('')+ggtitle('Protein Count')
+
+  temp_inten <- temp
+  p_inten <- cbind(colnames(temp_inten),colSums(temp_inten))
+  p_inten <- data.frame(p_inten)
+  p_inten[,1] <- factor(p_inten[,1],levels=p_inten[,1])
+  p_inten[,2] <- as.numeric(p_inten[,2])
+  p_i <- ggplot(data=p_count,aes(x=p_inten[,1],y=p_inten[,2]))+geom_bar(stat='identity') +
+    theme_bw() + theme(axis.text.x = element_text(angle = 60,hjust=1),legend.position = 'none',axis.text = element_text(size=12))+
+    xlab('')+ylab('')+ggtitle('Protein Total Intensity')
+
+  return(list(p_c,p_i))
+}
+
 #' @title Calculate mean and sd value by conditions
 #' @description Calculate mean and sd value by conditions.
 #' @details Input dataframe from previous processing, then return a data set with mean and sd values by conditions.

@@ -14,7 +14,7 @@
 #' @import RColorBrewer
 #' @examples prot_norm_example <- data_norm(prot_dat_example[1:15], 5, 3)
 
-data_norm <- function(prot_dat,condition_num,repeat_num,reference=TRUE,ref_col = c(1,7,13)){
+data_norm <- function(prot_dat,condition_num,repeat_num,reference=FALSE,ref_col = c(1,7,13)){
 
   if (reference == TRUE){
     data_graphic_draw_norm(prot_dat[,-ref_col],condition_num,repeat_num,'Before Normalization')
@@ -54,6 +54,12 @@ data_norm <- function(prot_dat,condition_num,repeat_num,reference=TRUE,ref_col =
   return(prot_norm)
 }
 
+#' @title Normalize MS TMT data with Sample Loading.
+#' @description Normalize MS TMT data with sample loading.
+#' @details Input dataframe from read_maxquant_prot() function, then return a data set after normalization with SL.
+#' @param prot_dat A DataFrame from read_maxquant_prot() with only numeric value.
+#' @return A DataFrame.
+#' @export
 data_norm_sl <- function(prot_dat){
   target <- mean(colSums(prot_dat))
   norm_facs <- target / colSums(prot_dat)
@@ -61,12 +67,25 @@ data_norm_sl <- function(prot_dat){
   return(prot_dat_sl)
 }
 
+#' @title Normalize MS TMT data with TMM.
+#' @description Normalize MS TMT data with Trimmed Mean of -values.
+#' @details Input dataframe from read_maxquant_prot() function, then return a data set after normalization with TMM.
+#' @param prot_dat A DataFrame from read_maxquant_prot() with only numeric value.
+#' @return A DataFrame.
+#' @import edgeR
+#' @export
 data_norm_tmm <- function(prot_dat){
   target <- calcNormFactors(prot_dat)
   prot_dat_tmm <- sweep(prot_dat,2,target,FUN='/')
   return(prot_dat_tmm)
 }
 
+#' @title Normalize MS TMT data with IRS.
+#' @description Normalize MS TMT data with Internal Reference Signal.
+#' @details Input dataframe from read_maxquant_prot() function, then return a data set after normalization with IRS.
+#' @param prot_dat A DataFrame from read_maxquant_prot() with only numeric value.
+#' @return A DataFrame.
+#' @export
 data_norm_irs <- function(prot_dat,condition_num,repeat_num){
   i <- 1
   irs <- cbind(as.numeric(rownames(prot_dat)),rowSums(prot_dat[,1:condition_num]))
@@ -94,6 +113,12 @@ data_norm_irs <- function(prot_dat,condition_num,repeat_num){
   return(prot_dat_irs)
 }
 
+#' @title Normalize MS TMT data with ERS.
+#' @description Normalize MS TMT data with External Reference Signal.
+#' @details Input dataframe from read_maxquant_prot() function, then return a data set after normalization with ERS.
+#' @param prot_dat A DataFrame from read_maxquant_prot() with only numeric value.
+#' @return A DataFrame.
+#' @export
 data_norm_ers <- function(prot_dat,condition_num,repeat_num,ref_col = c(1,7,13)){
   prot_ref <- prot_dat[,ref_col]
   temp <- prot_ref
@@ -111,6 +136,20 @@ data_norm_ers <- function(prot_dat,condition_num,repeat_num,ref_col = c(1,7,13))
   return(prot_dat)
 }
 
+#' @title Draw Dataset Summary.
+#' @description Draw dataset summary with density distribution, pca and cv.
+#' @details Input dataframe, then return a dataset summary with density distribution, pca and cv.
+#' @param prot_dat A DataFrame with only numeric value.
+#' @param condition_num A integer of condition number.
+#' @param repeat_num A integer of repeat number.
+#' @param state A title
+#' @export
+#' @import limma
+#' @import edgeR
+#' @import tidyverse
+#' @import psych
+#' @import RColorBrewer
+#' @examples prot_norm_example <- data_norm(prot_dat_example[1:15], 5, 3)
 data_graphic_draw_norm <- function(prot_dat, condition_num, repeat_num, state){
   qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
   col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))

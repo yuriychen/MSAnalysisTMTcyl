@@ -14,7 +14,7 @@
 #' prot_dat_example <- read_maxquant_prot(prot_exam,meta_exam)
 
 
-read_maxquant_prot <- function(prot_raw,meta,total=FALSE,reference=TRUE,zerotol=2){
+read_maxquant_prot <- function(prot_raw,meta,total=FALSE,reference=FALSE,zerotol=2){
   prot_dat_clean <- data_clean(prot_raw)
   prot_dat_extract <- data_extract(prot_dat_clean,meta,total,reference,zerotol)
   prot_annotation <- data_annotation(prot_dat_extract)
@@ -28,7 +28,7 @@ data_clean <- function(prot_raw){
   return(prot_dat_clean)
 }
 
-data_extract <- function(prot_dat,meta,total=FALSE,reference=TRUE,zerotol=2){
+data_extract <- function(prot_dat,meta,total=FALSE,reference=FALSE,zerotol=2){
 
   if (total == FALSE){
     if (reference == TRUE){

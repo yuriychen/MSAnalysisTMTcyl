@@ -1,7 +1,7 @@
 Package: MSAnalysisTMTcyl
 Type: Package
 Title: MS analysis functions for TMT data
-Version: 0.1.2
+Version: 0.1.4
 Author: Yulin Chen
 Maintainer: Yulin Chen <ychen209@qq.com>
 Depends: R (>= 4.0.0)

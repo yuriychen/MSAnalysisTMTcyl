@@ -4,7 +4,13 @@
 \alias{data_norm}
 \title{Normalize MS TMT data.}
 \usage{
-data_norm(prot_dat, condition_num, repeat_num)
+data_norm(
+  prot_dat,
+  condition_num,
+  repeat_num,
+  reference = FALSE,
+  ref_col = c(1, 7, 13)
+)
 }
 \arguments{
 \item{prot_dat}{A DataFrame from read_maxquant_prot() with only numeric value.}

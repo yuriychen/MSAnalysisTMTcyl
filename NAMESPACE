@@ -2,7 +2,13 @@
 
 export(data_calMean_calSD)
 export(data_draw_specific)
+export(data_graphic_draw_norm)
 export(data_norm)
+export(data_norm_ers)
+export(data_norm_irs)
+export(data_norm_sl)
+export(data_norm_tmm)
+export(data_proteins_summary)
 export(data_transform_melt)
 export(data_volcano)
 export(read_maxquant_prot)

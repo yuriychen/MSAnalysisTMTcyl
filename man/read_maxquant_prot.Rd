@@ -4,7 +4,13 @@
 \alias{read_maxquant_prot}
 \title{Read, clean and annotate MS TMT data.}
 \usage{
-read_maxquant_prot(prot_raw, meta, total = FALSE)
+read_maxquant_prot(
+  prot_raw,
+  meta,
+  total = FALSE,
+  reference = FALSE,
+  zerotol = 2
+)
 }
 \arguments{
 \item{prot_raw}{A DataFrame of proteinGroups from MaxQuant.}

@@ -14,7 +14,7 @@ data_volcano(
   ydown = 0,
   ytop = 3,
   confidence = 0.95,
-  s0 = 0.01
+  s0 = 0.1
 )
 }
 \arguments{
