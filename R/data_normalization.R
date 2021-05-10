@@ -199,6 +199,18 @@ data_calCV_draw <- function(prot_dat,condition_num,repeat_num,state){
   boxplot(prot_dat_cv, col = col_vector[9:(condition_num+8)], main = state)
 }
 
+#' @title Draw Pearson Plot.
+#' @description Draw Pearson Plot.
+#' @details Input dataframe, then return a set of Pearson plots.
+#' @param prot_dat A DataFrame from with only numeric value.
+#' @param condition_num A integer of condition number.
+#' @param repeat_num A integer of repeat number.
+#' @param state A title.
+#' @export
+#' @import limma
+#' @import edgeR
+#' @import tidyverse
+#' @import psych
 data_pearson_draw <- function(prot_dat, condition_num, repeat_num,state=''){
   prot_dat_reorder <- data_rearrange(prot_dat,condition_num,repeat_num)
   i <- 1
@@ -209,5 +221,56 @@ data_pearson_draw <- function(prot_dat, condition_num, repeat_num,state=''){
     pairs.panels(log2(prot_dat_reorder[,start_site:stop_site]), lm = TRUE,main=state)
     i <- i + 1
   }
+}
+
+#' @title Zero Substitution in 3 Repeats.
+#' @description Zero value substitution of 1 repeat in 3 repeats with average.
+#' @details Input dataframe, and column start and end index of each repeat, then return a set of dataframe.
+#' @param protdat A DataFrame from with only numeric value.
+#' @param s1 A integer of start index of repeat 1.
+#' @param e1 A integer of end index of repeat 1.
+#' @param s2 A integer of start index of repeat 2.
+#' @param e2 A integer of end index of repeat 2.
+#' @param s3 A integer of start index of repeat 3 need substitution.
+#' @param e3 A integer of end index of repeat 3 need substitution.
+#' @param condition_num A integer of condition numbers.
+#' @param least A integer for zero substitution for repeat 1 and 2.
+#' @export
+data_zero_substitution_3repeats <- function(protdat,s1,e1,s2,e2,s3,e3,condition_num,least=30){
+  temp_1 <- protdat[,s1:e1]
+  temp_1[temp_1 == 0] <- least
+  temp_2 <- protdat[,s2:e2]
+  temp_2[temp_2 == 0] <- least
+  temp_3 <- protdat[,s3:e3]
+
+  temp_12 <- cbind(temp_1,temp_2)
+  temp_12_norm <- data_norm_irs(temp_12,condition_num,2)
+
+  temp_1 <- temp_12_norm[,1:condition_num]
+  temp_2 <- temp_12_norm[,(condition_num + 1):(condition_num * 2)]
+
+  i <- 1
+  while(i <= condition_num){
+    temp_3[,i] <- (temp_1[,i] + temp_2[,i]) / 2
+    i <- i + 1
+  }
+
+  protdat[,s1:e1] <- temp_1
+  protdat[,s2:e2] <- temp_2
+  protdat[,s3:e3] <- temp_3
+
+  return(protdat)
+}
+
+#' @title Scale Dataframe.
+#' @description Scale dataframe by row to mean of 0 and sd of 1.
+#' @details Input dataframe, then return a dataframe after scaled.
+#' @param prot A DataFrame with only numeric value.
+#' @export
+data_scale_mat <- function(prot){
+  m <- apply(prot, 1, mean)
+  s <- apply(prot, 1, sd)
+  prot <- (prot - m) / s
+  return(prot)
 }
 

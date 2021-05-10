@@ -74,13 +74,12 @@ data_calMean_calSD <- function(prot_dat, meta){
 #' @param ytop A numeric for x-axis limit on top.
 #' @param confidence A numeric of confidence interval.
 #' @param s0 A numeric of fudge factor s0.
-#' @return A ggplot object.
+#' @param smooth_curve A boolean of significant curve or not.
+#' @return A list of dataframe and ggplot object.
 #' @export
 #' @import ggplot2
 #' @import ggrepel
-#' @examples data_volcano(prot_norm_example[,c(2,7,12)],prot_norm_example[,c(5,10,15)],meta_exam,4)
-
-data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, ydown=0, ytop=3, confidence=.95, s0=.1){
+data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, ydown=0, ytop=5, confidence=.95, s0=.1,smooth_curve=TRUE){
   ta <- qt(confidence,df)
 
   prot_dat_com <- cbind(prot_dat_1,prot_dat_2)
@@ -97,16 +96,100 @@ data_volcano <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, y
   colnames(prot_fudge) <- c('l2fc','lgpvalue')
   rownames(prot_fudge) <- rownames(prot_dat_1)
   prot_fudge$fudge <- apply(prot_fudge,1, function(x){data_calsmoothcurve(as.numeric(x[1]),ta,s0,df)})
-  prot_fudge$sig <- apply(prot_fudge,1,function(x){ifelse(((as.numeric(x[2]) > as.numeric(x[3])) & (abs(as.numeric(x[1]))>ta*s0)),'1','0')})
+  prot_fudge$sig <- '0'
+  prot_fudge$sig <- apply(prot_fudge,1,function(x){ifelse(((as.numeric(x[2]) > as.numeric(x[3])) & ((as.numeric(x[1])) > ta*s0)),'1',x[4])})
+  prot_fudge$sig <- apply(prot_fudge,1,function(x){ifelse(((as.numeric(x[2]) > as.numeric(x[3])) & ((as.numeric(x[1])) < -ta*s0)),'-1',x[4])})
+
   prot_fudge_sig <- subset(prot_fudge,sig=='1')
 
   p <- ggplot(prot_fudge,aes(x=l2fc,y=lgpvalue,color=sig))+geom_point()+theme_bw()+
-    scale_color_manual(values = c('black','red'))+theme(legend.position = 'none',title = element_text(size=20),axis.text = element_text(size=16))+
+    scale_color_manual(values = c('red','grey60','green'))+theme(legend.position = 'none',title = element_text(size=20),axis.text = element_text(size=16))+
     xlab('Log2(Fold Change)')+ylab('-Log10(P-value)')+
     geom_text_repel(prot_fudge_sig,mapping=aes(label=rownames(prot_fudge_sig)),vjust=1,size=5,color='red')+
-    geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(.02,xright),linetype='dashed',n=10000,size=2,alpha=.3,color='darkred')+
-    geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(xleft,-.02),size=2,alpha=.3,color='darkgreen',n=10000,linetype='dashed')+
     xlim(xleft,xright)+ylim(ydown,ytop)
+
+  if (smooth_curve == TRUE){
+    p <- p + geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(.02,xright),linetype='dashed',n=10000,size=2,alpha=.3,color='darkred')+
+      geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(xleft,-.02),size=2,alpha=.3,color='darkgreen',n=10000,linetype='dashed')
+  }
+
+  return(list(prot_fudge,p))
+}
+
+#' @title Draw volcano plot with Labels
+#' @description Draw volcano plot with manual labels.
+#' @details Input dataframe from previous processing, then return a ggplot object of volcano plot.
+#' @param prot_dat_1 A DataFrame of condition 1.
+#' @param prot_dat_2 A DataFrame of condition 2.
+#' @param meta A DataFrame of meta file.
+#' @param df A integer of freedom dgree.
+#' @param xleft A numeric for x-axis limit on left.
+#' @param xright A numeric for x-axis limit on right.
+#' @param ydown A numeric for x-axis limit on bottom.
+#' @param ytop A numeric for x-axis limit on top.
+#' @param confidence A numeric of confidence interval.
+#' @param s0 A numeric of fudge factor s0.
+#' @param smooth_curve A boolean of significant curve or not.
+#' @param label A boolean of label or not.
+#' @param label_list A list of labels.
+#' @return A list of dataframe and ggplot object.
+#' @export
+#' @import ggplot2
+#' @import ggrepel
+data_volcano_label <- function(prot_dat_1, prot_dat_2, meta, df, xleft=-5, xright=5, ydown=0, ytop=5, confidence=.95, s0=.1,smooth_curve=TRUE,label=TRUE,label_list = 'none'){
+  ta <- qt(confidence,df)
+
+  prot_dat_com <- cbind(prot_dat_1,prot_dat_2)
+  colnum1 <- ncol(prot_dat_1)
+  colnum2 <- ncol(prot_dat_2)
+  pvalue <- apply(prot_dat_com, 1, function(x){t.test(x[1:colnum1],x[(colnum1 + 1):(colnum2+colnum1)],paired = F)$p.value})
+  lgpvalue <- -log10(pvalue)
+
+  prot_mean_sd <- data_calMean_calSD(cbind(prot_dat_1,prot_dat_2),meta)
+  fc <- prot_mean_sd[,3] / prot_mean_sd[,1]
+  l2fc <- log10(fc)
+
+  prot_fudge <- data.frame(l2fc,lgpvalue)
+  colnames(prot_fudge) <- c('l2fc','lgpvalue')
+  rownames(prot_fudge) <- rownames(prot_dat_1)
+  prot_fudge$fudge <- apply(prot_fudge,1, function(x){data_calsmoothcurve(as.numeric(x[1]),ta,s0,df)})
+  prot_fudge$sig <- '0'
+  prot_fudge$sig <- apply(prot_fudge,1,function(x){ifelse(((as.numeric(x[2]) > as.numeric(x[3])) & ((as.numeric(x[1])) > ta*s0)),'1',x[4])})
+  prot_fudge$sig <- apply(prot_fudge,1,function(x){ifelse(((as.numeric(x[2]) > as.numeric(x[3])) & ((as.numeric(x[1])) < -ta*s0)),'-1',x[4])})
+
+  prot_fudge_sig <- subset(prot_fudge,sig=='1')
+
+  prot_fudge$label <- ifelse(rownames(prot_fudge) %in% label_list,'10','0')
+  prot_fudge_label <- subset(prot_fudge,label=='10')
+
+  prot_fudge$symbol <- as.character(as.numeric(prot_fudge$sig) + as.numeric(prot_fudge$label))
+
+  if (label==TRUE){
+    p <- ggplot(prot_fudge,aes(x=l2fc,y=lgpvalue,color=symbol))+geom_point(size=3,shape=1,stroke=1.5)+theme_bw()+
+      scale_color_manual(values = c('red','grey60','green','blue','blue'))+
+      theme(legend.position = 'none',title = element_text(size=20),axis.text = element_text(size=16))+
+      xlab('Log2(Fold Change)')+ylab('-Log10(P-value)')+
+      geom_text_repel(prot_fudge_label,mapping=aes(label=rownames(prot_fudge_label)),vjust=-0.5,hjust=-0.5,size=5,color='blue')+
+      xlim(xleft,xright)+ylim(ydown,ytop)
+
+    if (smooth_curve == TRUE){
+      p <- p + geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(.02,xright),linetype='dashed',n=10000,size=2,alpha=.3,color='darkred')+
+        geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(xleft,-.02),size=2,alpha=.3,color='darkgreen',n=10000,linetype='dashed')
+    }
+
+  }
+  else {
+    p <- ggplot(prot_fudge,aes(x=l2fc,y=lgpvalue,color=symbol))+geom_point(size=3,shape=1,stroke=1.5)+theme_bw()+
+      scale_color_manual(values = c('red','grey60','green'))+theme(legend.position = 'none',title = element_text(size=20),axis.text = element_text(size=16))+
+      xlab('Log10(Fold Change)')+ylab('-Log10(P-value)')+
+      xlim(xleft,xright)+ylim(ydown,ytop)
+
+    if (smooth_curve == TRUE){
+      p <- p + geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(.02,xright),linetype='dashed',n=10000,size=2,alpha=.3,color='darkred')+
+        geom_function(fun=function(x){data_calsmoothcurve(x,ta,s0,df)},xlim=c(xleft,-.02),size=2,alpha=.3,color='darkgreen',n=10000,linetype='dashed')
+    }
+  }
+
   return(list(prot_fudge,p))
 }
 
