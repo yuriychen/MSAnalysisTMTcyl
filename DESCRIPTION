@@ -1,7 +1,7 @@
 Package: MSAnalysisTMTcyl
 Type: Package
 Title: MS analysis functions for TMT data
-Version: 0.1.5
+Version: 0.1.6
 Author: Yulin Chen
 Maintainer: Yulin Chen <ychen209@qq.com>
 Depends: R (>= 4.0.0)
@@ -17,4 +17,4 @@ Imports: limma,
     ggplot2,
     ggrepel,
     reshape2
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
